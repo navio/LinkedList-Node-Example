@@ -1,4 +1,8 @@
-taskerJS
-========
+#TaskerJS
 
-Tasker Engine to Organize and control events to be executed in order to fulfill a task.
+Overview
+===
+
+The purpose of this script is to support taking activities, such as create starting point, steps, and states of completness. 
+
+ 
