@@ -7,8 +7,13 @@ var task = {
 
 var activity = {
 
-	first: null,
-	last: null,
+
+	
+	first: null,  // First Task in the activity
+	
+	last: null,  // Last Task = Completness &pointer. The last element is discovered by pointer to null object.
+	
+	lenght: 0,
 	/*
 	@private 
 	@description Task Constructor | Object Factory
@@ -28,25 +33,33 @@ var activity = {
 	@description function to create a node add description (Doesn)
 	*/
 
-	add: function(content){
+	add: function(content, index){
 
-		if (!first){
+		// Missing validation.
+
+
+		if (!first){ 
 			first = createTask(content,null);
-			return true;	
+			return lenght++;	
 		} 
 
+		var cIndex = 1
 		var current = first;
 		
 		while(current.next){
+
+			if( cIndex == index ) break;
 			
 			current = current.next
+			cIndex++
+
 		}
 
-		current.next = createTask(content,null);
+		current.next = createTask(content,current.next); // Add old next, to new element.
 
 		last = current.next; // 
-		
-		return true;
+
+		return lenght++;
 	},
 
 
@@ -54,8 +67,56 @@ var activity = {
 	@public
 	@description retrieve task by index.
 	*/
-	getTask: function(index){
+	get: function(index){
 
+		if( index > lenght || index < 1 ) return false; 
+
+		var cIndex = 1
+		var current = first;
+		
+		while(current.next){
+
+			if( cIndex == index ) break;
+			
+			current = current.next
+			cIndex++
+
+		}
+
+		return current;
+
+	},
+	
+	/*
+	@public
+	@description delete element from list.
+	*/
+
+	delete: function(index){
+
+		if( index > lenght || index < 1 ) return false; 
+
+		var cIndex = 1
+		var current = first;
+
+		if(index == 1 ) first = current.next;
+ 
+		while(current.next){
+
+			if( cIndex + 1 == index  ){  // to erase 2 and linke 3 to 1 
+
+				nextElement = current.next
+				current.next = nextElement.next;
+				return current;
+			
+			} 
+
+			current = current.next
+			cIndex++
+
+		}
+
+		return false;
 
 
 	},
@@ -67,13 +128,13 @@ var activity = {
 
 	iterator = {
 
-		index: -1,
+		index: 0,
 
-		hasNext: function(){ /* Check if has a next element || index minus lenght  */ },
+		hasNext: function(){ return index < lenght; /* Check if has a next element || index minus lenght  */ },
 
-		hasPrev: function(){ /*  Check if has prev elements || index greter than 1 */},
+		hasPrev: function(){ return index > 1; /*  Check if has prev elements || index greter than 1 */},
 
-		current: function(){ /* return index task */ return getTask(index); },
+		current: function(){ /* return index task */ return get(index); },
 
 		 next : function(){
 	        if(this.hasNext()){
@@ -83,12 +144,21 @@ var activity = {
 	        return false;
 	    },
 
-	    previous : function(){
+	    previous: function(){
 	        if(this.hasPrevious()){
 	            this.index = this.index - 1 // set index minus one
 	            return this.current();
 	        }
 	        return false;
+	    },
+
+	    moveTo: function(tindex){
+
+	    	if( tindex > lenght || tindex < 1 ) return false; 
+	    	
+	    	index = tIndex;
+	    	
+	    	return  index;
 	    }
 	
 	}
