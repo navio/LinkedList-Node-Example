@@ -9,7 +9,7 @@ var activity = {
 
 
 	
-	first: null,  // First Task in the activity
+	first: null,  // First Task in the activity || Array to make it multiplehead.a
 	
 	last: null,  // Last Task = Completness &pointer. The last element is discovered by pointer to null object.
 	
@@ -89,7 +89,7 @@ var activity = {
 	
 	/*
 	@public
-	@description delete element from list.
+	@description delete element from list	.
 	*/
 
 	delete: function(index){
