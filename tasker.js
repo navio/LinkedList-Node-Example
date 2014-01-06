@@ -1,32 +1,62 @@
-var task = {
+
+var node = {
 	
-	var content: null,
-	var next: null,
-	var options: []
+	content : null,
+	next : null,
+	options : []
+
 }
 
-var activity = {
+var list = {
 
 
 	
-	first: null,  // First Task in the activity || Array to make it multiplehead.a
+	first : null,  // First Task in the list || Array to make it multiplehead.a
 	
 	last: null,  // Last Task = Completness &pointer. The last element is discovered by pointer to null object.
 	
 	lenght: 0,
+	
+	index: 0,
 	/*
 	@private 
 	@description Task Constructor | Object Factory
-
 	*/
+
 	createTask: function(content, nextTask){
 
-		var task = Object.create('task')
-		task.content = content;
-		task.next = nextTask;
+		var newTask = Object.create(node)
 
-		return task;
+		newTask.content = content;
+		newTask.next = nextTask;
+
+		return newTask;
 	},
+	/*
+	@private 
+	@description Count 
+	*/
+
+	count: function(){
+
+		var cIndex = 1
+		var current = this.first;
+		
+		while(current.next){
+	
+			current = current.next
+			cIndex++
+		
+		}
+
+		this.last = current;
+
+		return cIndex; 
+
+	},
+
+
+
 
 	/*
 	@public 
@@ -35,16 +65,16 @@ var activity = {
 
 	add: function(content, index){
 
-		// Missing validation.
+		var that = this;
 
-
-		if (!first){ 
-			first = createTask(content,null);
-			return lenght++;	
+		if (!that.first){ 
+			that.first = that.last = that.createTask(content,null);
+			that.lenght++;
+			return that.first;	
 		} 
 
 		var cIndex = 1
-		var current = first;
+		var current = that.first;
 		
 		while(current.next){
 
@@ -55,11 +85,23 @@ var activity = {
 
 		}
 
-		current.next = createTask(content,current.next); // Add old next, to new element.
+		if ( typeof content == 'node') {
 
+			current.next = content;
+			lenght = count(); // Recount Elements in case of increase the chain.
+			return current;
+
+		}
+
+		current.next = that.createTask(content,current.next); // Add old next, to new element.
 		last = current.next; // 
+		
+		that.lenght++;
 
-		return lenght++;
+		return current;
+		
+
+
 	},
 
 
@@ -67,12 +109,13 @@ var activity = {
 	@public
 	@description retrieve task by index.
 	*/
+
 	get: function(index){
 
-		if( index > lenght || index < 1 ) return false; 
+		if( index > this.lenght || index < 1 ) return false; 
 
 		var cIndex = 1
-		var current = first;
+		var current = this.first;
 		
 		while(current.next){
 
@@ -89,30 +132,37 @@ var activity = {
 	
 	/*
 	@public
+	@param index, of task to be remove;
+	@param all, boolean if true remove following tasks. 
 	@description delete element from list	.
 	*/
 
-	delete: function(index){
+	delete: function(index, all){
 
-		if( index > lenght || index < 1 ) return false; 
+		if( index > this.lenght || index < 1 ) return false; 
 
 		var cIndex = 1
-		var current = first;
+		var current = this.first;
 
-		if(index == 1 ) first = current.next;
+		if(index == 1 ) this.first = current.next;
  
 		while(current.next){
 
-			if( cIndex + 1 == index  ){  // to erase 2 and linke 3 to 1 
+			if( cIndex + 1 == index  ){  // to erase 2 and link 3 to 1 
 
 				nextElement = current.next
+				
 				current.next = nextElement.next;
+				
+				if(all) current.next = null;
+
 				return current;
 			
 			} 
 
 			current = current.next
-			cIndex++
+			
+			cIndex--;
 
 		}
 
@@ -121,50 +171,64 @@ var activity = {
 
 	},
 
+
+	
+
+	hasNext: function(){ return this.index < this.lenght;  },
+
+	hasPrev: function(){ return this.index > 1; },
+
+	
 	/*
 	@public
-	@description Iterator to retrieve elements in the list.
+	@description Iterator current element
 	*/
 
-	iterator = {
+	current: function(){ return this.get(this.index); },
 
-		index: 0,
 
-		hasNext: function(){ return index < lenght; /* Check if has a next element || index minus lenght  */ },
+	/*
+	@public
+	@description Check if there are still element and return the next.
+	*/
 
-		hasPrev: function(){ return index > 1; /*  Check if has prev elements || index greter than 1 */},
+	next : function(){
+        if(this.hasNext()){
+        	this.index = this.index + 1; 
+            return this.current();
+        } 
+        return false;
+    },
 
-		current: function(){ /* return index task */ return get(index); },
+    /*
+	@public
+	@description Check if there are element before the current element and return the 
+	*/
 
-		 next : function(){
-	        if(this.hasNext()){
-	        	this.index = this.index + 1; // set index plus one
-	            return this.current();
-	        } 
-	        return false;
-	    },
+    previous: function(){
+        
+        if(this.hasPrev()){
+           
+            this.index = this.index - 1; // set index minus one
+            return this.current();
+        
+        }
+        
+        return false;
+    },
 
-	    previous: function(){
-	        if(this.hasPrevious()){
-	            this.index = this.index - 1 // set index minus one
-	            return this.current();
-	        }
-	        return false;
-	    },
+    /*
+	@public
+	@description move index 
+	*/
+    moveTo: function(index){
 
-	    moveTo: function(tindex){
-
-	    	if( tindex > lenght || tindex < 1 ) return false; 
-	    	
-	    	index = tIndex;
-	    	
-	    	return  index;
-	    }
+    	if( index > this.lenght || index < 1 ) return false; 
+    	
+    	this.index = index;
+    	
+    	return this.index;
+    }
 	
-	}
-
-
 
 }
-
-

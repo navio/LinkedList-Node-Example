@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+	<title>Example</title>
+</head>
+<body>
+
+</body>
+<script src="tasker.js"></script>
+
+<script type="text/javascript">
+
+var myList = Object.create(list);
+
+myList.add('Hello');
+myList.add('My');
+myList.add('Name');
+myList.add('Is');
+myList.add('Test');
+
+myList.delete(2);
+
+//console.log(myList.count(), myList.get(2)  );
+
+console.log(myList.next(), myList.next(), myList.previous());
+
+</script>
+
+</html>
