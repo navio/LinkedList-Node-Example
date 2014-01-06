@@ -9,21 +9,16 @@ var node = {
 
 var list = {
 
-
-	
-	first : null,  // First Task in the list || Array to make it multiplehead.a
-	
-	last: null,  // Last Task = Completness &pointer. The last element is discovered by pointer to null object.
-	
+	first : null,  
+	last: null,  
 	lenght: 0,
-	
 	index: 0,
+	
 	/*
 	@private 
 	@description Task Constructor | Object Factory
 	*/
-
-	createTask: function(content, nextTask){
+	createNode: function(content, nextTask){
 
 		var newTask = Object.create(node)
 
@@ -32,11 +27,11 @@ var list = {
 
 		return newTask;
 	},
+	
 	/*
 	@private 
-	@description Count 
+	@description Count elements  
 	*/
-
 	count: function(){
 
 		var cIndex = 1
@@ -62,13 +57,12 @@ var list = {
 	@public 
 	@description function to create a node add description (Doesn)
 	*/
-
 	add: function(content, index){
 
 		var that = this;
 
 		if (!that.first){ 
-			that.first = that.last = that.createTask(content,null);
+			that.first = that.last = that.createNode(content,null);
 			that.lenght++;
 			return that.first;	
 		} 
@@ -93,7 +87,7 @@ var list = {
 
 		}
 
-		current.next = that.createTask(content,current.next); // Add old next, to new element.
+		current.next = that.createNode(content,current.next); // Add old next, to new element.
 		last = current.next; // 
 		
 		that.lenght++;
@@ -109,7 +103,6 @@ var list = {
 	@public
 	@description retrieve task by index.
 	*/
-
 	get: function(index){
 
 		if( index > this.lenght || index < 1 ) return false; 
@@ -136,7 +129,6 @@ var list = {
 	@param all, boolean if true remove following tasks. 
 	@description delete element from list	.
 	*/
-
 	delete: function(index, all){
 
 		if( index > this.lenght || index < 1 ) return false; 
@@ -172,10 +164,16 @@ var list = {
 	},
 
 
-	
-
+	/*
+	@private 
+	@description check if more elements exist. 
+	*/
 	hasNext: function(){ return this.index < this.lenght;  },
 
+	/*
+	@private 
+	@description check if there are previous elements. 
+	*/
 	hasPrev: function(){ return this.index > 1; },
 
 	
@@ -183,7 +181,6 @@ var list = {
 	@public
 	@description Iterator current element
 	*/
-
 	current: function(){ return this.get(this.index); },
 
 
@@ -191,7 +188,6 @@ var list = {
 	@public
 	@description Check if there are still element and return the next.
 	*/
-
 	next : function(){
         if(this.hasNext()){
         	this.index = this.index + 1; 
@@ -204,7 +200,6 @@ var list = {
 	@public
 	@description Check if there are element before the current element and return the 
 	*/
-
     previous: function(){
         
         if(this.hasPrev()){
