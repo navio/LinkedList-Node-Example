@@ -24,6 +24,18 @@ myList.delete(2);
 
 console.log(myList.next(), myList.next(), myList.previous());
 
+console.log(myList.length);
+
+(function(myList){
+	var myTask = myList.current();
+	console.log(myTask.content)
+	while( myTask = myList.next()){
+
+		console.log(myTask.content);
+	}
+
+})(myList)
+
 </script>
 
 </html>

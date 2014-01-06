@@ -11,7 +11,7 @@ var list = {
 
 	first : null,  
 	last: null,  
-	lenght: 0,
+	length: 0,
 	index: 0,
 	
 	/*
@@ -32,9 +32,10 @@ var list = {
 	@private 
 	@description Count elements  
 	*/
+
 	count: function(){
 
-		var cIndex = 1
+		var cIndex = 0
 		var current = this.first;
 		
 		while(current.next){
@@ -45,6 +46,7 @@ var list = {
 		}
 
 		this.last = current;
+		this.length = cIndex;
 
 		return cIndex; 
 
@@ -63,9 +65,11 @@ var list = {
 
 		if (!that.first){ 
 			that.first = that.last = that.createNode(content,null);
-			that.lenght++;
+			that.length = 1;
 			return that.first;	
 		} 
+
+		if(index == null) index = 0; // basically to go to the last element.
 
 		var cIndex = 1
 		var current = that.first;
@@ -79,22 +83,26 @@ var list = {
 
 		}
 
-		if ( typeof content == 'node') {
+		if ( typeof content == 'node') { // check if object and has element next
 
-			current.next = content;
-			lenght = count(); // Recount Elements in case of increase the chain.
+			if ( content.next == null ) content.next = elementToAttach; // if new element null attach previous element.
+
+			current.next = content; // attach new content to current.next and for case on single node is complete.
+
+			if ( elementToAttach != null ) that.add(elementToAttach, null);	// if element to attach to content is not null, then attach to last element.
+		    		
+			that.count(); // Recount Elements in case of increase the chain.
+			
 			return current;
 
 		}
 
 		current.next = that.createNode(content,current.next); // Add old next, to new element.
-		last = current.next; // 
-		
-		that.lenght++;
+				
+		that.count();
 
 		return current;
 		
-
 
 	},
 
@@ -105,7 +113,7 @@ var list = {
 	*/
 	get: function(index){
 
-		if( index > this.lenght || index < 1 ) return false; 
+		if( index > this.length || index < 1 ) return false; 
 
 		var cIndex = 1
 		var current = this.first;
@@ -127,11 +135,13 @@ var list = {
 	@public
 	@param index, of task to be remove;
 	@param all, boolean if true remove following tasks. 
-	@description delete element from list	.
+	@description delete element from list.
+	@return delete node
 	*/
+	
 	delete: function(index, all){
 
-		if( index > this.lenght || index < 1 ) return false; 
+		if( index > this.length || index < 1 ) return false; 
 
 		var cIndex = 1
 		var current = this.first;
@@ -148,7 +158,7 @@ var list = {
 				
 				if(all) current.next = null;
 
-				return current;
+				return nextElement;
 			
 			} 
 
@@ -168,7 +178,7 @@ var list = {
 	@private 
 	@description check if more elements exist. 
 	*/
-	hasNext: function(){ return this.index < this.lenght;  },
+	hasNext: function(){ return this.index < this.length;  }, // or has  return this.current().next == null ? true : false 
 
 	/*
 	@private 
@@ -218,7 +228,7 @@ var list = {
 	*/
     moveTo: function(index){
 
-    	if( index > this.lenght || index < 1 ) return false; 
+    	if( index > this.length || index < 1 ) return false; 
     	
     	this.index = index;
     	
