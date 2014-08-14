@@ -1,4 +1,4 @@
-#TaskerJS
+#TaskerJS - Linked List Implementation on JS
 
 ##Overview
 
